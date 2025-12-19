@@ -1,4 +1,4 @@
-This repository contains my solutions to selected exercises from “Introduction to Statistical Learning (Python Edition)”.
+This repository contains my solutions to some exercises from “Introduction to Statistical Learning (Python Edition)”.
 
 The main goal of this project is to:
 - Strengthen my understanding of key statistical learning concepts;
