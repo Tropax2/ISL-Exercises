@@ -22,16 +22,19 @@ X_pred = pd.DataFrame(data={'dis': values_to_predict})
 
 X_transformed = spec.transform(X_pred)
 prediction = model.predict(X_transformed)
+'''
 fig, ax = plt.subplots(figsize=(8,8))
 ax.plot(X_pred, prediction, color='blue')
 ax.scatter(Boston['dis'], Y)
 ax.set_ylabel("Predicted nox")
 ax.set_xlabel("Values of dis")
 ax.set_title("Prediction")
-#plt.show()
+plt.show()
+'''
 
 # Part (b)
 list_of_RSS = []
+'''
 for d in range(1, 11):
     spec = MS([poly('dis', degree=d)])
     X_train = spec.fit_transform(Boston)
@@ -47,10 +50,10 @@ for d in range(1, 11):
     ax.set_ylabel("Predicted nox")
     ax.set_xlabel("Values of dis")
     ax.set_title("Prediction")
-    #plt.show()
-
+    plt.show()
+'''
     
-print(np.argmin(list_of_RSS) + 1)
+#print(np.argmin(list_of_RSS) + 1)
 '''
 We verify that the model with lowest RSS is a polynomial with degree 10
 '''
@@ -65,13 +68,29 @@ for d in range(1, 11):
     cv_err = np.mean(cv_results['test_score'])
     score_results.append(cv_err)
 
-print(np.argmax(score_results) + 1)
+#print(np.argmax(score_results) + 1)
 '''
 We verify that the model with highest test score is a polynomial with degree 10
 '''
 
 # Part (d)
+bs_nix = MS([bs('dis', df= 4, name="bs(dis)")])
+Xbs = bs_nix.fit_transform(Boston)
+model = sm.OLS(Y, Xbs).fit()
+#print(summarize(model))
 
+spline_values = bs_nix.transform(X_pred)
+spline_pred = model.predict(spline_values)
+
+fig, ax = plt.subplots(figsize=(8,8))
+ax.plot(X_pred, spline_pred, color='blue')
+ax.scatter(Boston['dis'], Y)
+ax.set_ylabel("Predicted nox")
+ax.set_xlabel("Values of dis")
+ax.set_title("Prediction")
+plt.show()
+
+# Part (e)
 
 
 
