@@ -34,7 +34,7 @@ plt.show()
 
 # Part (b)
 list_of_RSS = []
-'''
+"""
 for d in range(1, 11):
     spec = MS([poly('dis', degree=d)])
     X_train = spec.fit_transform(Boston)
@@ -51,9 +51,9 @@ for d in range(1, 11):
     ax.set_xlabel("Values of dis")
     ax.set_title("Prediction")
     plt.show()
-'''
-    
+"""
 #print(np.argmin(list_of_RSS) + 1)
+
 '''
 We verify that the model with lowest RSS is a polynomial with degree 10
 '''
@@ -81,7 +81,7 @@ model = sm.OLS(Y, Xbs).fit()
 
 spline_values = bs_nix.transform(X_pred)
 spline_pred = model.predict(spline_values)
-
+"""
 fig, ax = plt.subplots(figsize=(8,8))
 ax.plot(X_pred, spline_pred, color='blue')
 ax.scatter(Boston['dis'], Y)
@@ -89,8 +89,36 @@ ax.set_ylabel("Predicted nox")
 ax.set_xlabel("Values of dis")
 ax.set_title("Prediction")
 plt.show()
+"""
 
 # Part (e)
+list_of_spline_RSS = []
 
+for d in range(3, 11):
+    bs_nix = MS([bs('dis', df=d)])
+    Xbs = bs_nix.fit_transform(Boston)
+    model = sm.OLS(Y, Xbs).fit()
+    spline_values = bs_nix.transform(X_pred)
+    spline_pred = model.predict(spline_values)
 
+    RSS = np.sum((Y - spline_pred)**2)
+    list_of_spline_RSS.append(RSS)
 
+#print(np.argmin(list_of_spline_RSS) + 1)
+
+# We verify that the spline with lowest RSS is the spline with 9 degrees of freedom 
+
+# Part (f)
+
+score_results = []
+for d in range(3, 11):
+    bs_nix = MS([bs('dis', df=d)])
+    X = Boston.drop(columns='nox')
+    spline_model = sklearn_sm(sm.OLS, MS([bs('dis', df=d)]))
+    cv_results = cross_validate(spline_model, X, Y, cv=5)
+    cv_err = np.mean(cv_results['test_score'])
+    score_results.append(cv_err)
+
+print(np.argmax(score_results) + 1)
+
+# cv results affirm that the best spline has a degree of freedom equal to 10!
